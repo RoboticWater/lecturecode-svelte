@@ -1,6 +1,8 @@
 <script>
 	import CodeMirror from "codemirror";
 	import axios from 'axios';
+	import io from 'socket.io-client';
+
 	import "codemirror/mode/javascript/javascript.js";
 	import "codemirror/mode/handlebars/handlebars.js";
 	import "codemirror/mode/xml/xml.js";
@@ -34,6 +36,20 @@
 	
 
 	onMount(() => {
+		const socket = io(window.location.origin);
+		socket.on('connected', () => console.log("Connected"));
+		socket.on('fileupdate', filename => {
+			console.log('fileupdate');
+			getFiles()
+			// if (this.state.cur_filename === filename) {
+			// 	axios.get('/api/files/' + filename)
+			// 	.then(res => {
+			// 		this.setState({cur_file: res.data, cur_filename: filename }, () => {
+			// 		})
+			// 	})
+			// 	.catch(e => console.log(e));
+			// }
+		});
 		editor = CodeMirror.fromTextArea(content, {
 			lineNumbers: true,
 			lineWrapping: true,
@@ -50,6 +66,10 @@
 			},
 			theme: 'material',
 		});
+		getFiles();
+	})
+
+	function getFiles() {
 		axios.get('/api/files')
 		.then(res => {
 			res.data.map(file => {
@@ -61,7 +81,7 @@
 			treeroot = treeroot;
 		})
 		.catch(e => console.log(e));
-	})
+	}
 </script>
 
 <div class="root">
@@ -75,7 +95,7 @@
 		</div>
 	</div>
 	<div class="filetree">
-		{#each t.files as file}
+		{#each treeroot.files as file}
 			<FileNode {...file} updateContent={() => {}} collapse={false}/>
 		{/each}
 	</div>
