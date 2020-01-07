@@ -88,9 +88,6 @@
 	function getContent(reference) {
 		axios.get('/api/files/' + reference)
 			.then(res => {
-				console.log("data recieved");
-				console.log(res.data);
-				
 				editor.setValue(res.data);
 				cur_file = reference;
 			})
@@ -132,6 +129,7 @@
 	}
 	.content {
 		grid-area: content;
+		height: calc(100vh - 50px);
 	}
 	.content :global(.CodeMirror) {
 		width: 100%;
@@ -166,5 +164,8 @@
 		height: 100%;
 		width: 50px;
 		margin-left: 3px;
+	}
+	input {
+		padding: 0 0 0 3px;
 	}
 </style>
