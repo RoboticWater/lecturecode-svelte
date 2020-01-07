@@ -70,12 +70,12 @@
 	]
 
 	let t = {name: 'root', files: []}
-	files.map(file => {
-		let path = file.metadata.path.replace('./', '').replace(/\\/g, '/').split('/')
-		return {reference: file.filename, path: path.slice(1, -1), name: path.slice(-1)[0]}
-	}).forEach(file => {
-		insertFile(file, file.path, t);
-	});	
+	// files.map(file => {
+	// 	let path = file.metadata.path.replace('./', '').replace(/\\/g, '/').split('/')
+	// 	return {reference: file.filename, path: path.slice(1, -1), name: path.slice(-1)[0]}
+	// }).forEach(file => {
+	// 	insertFile(file, file.path, t);
+	// });	
 
 	function insertFile(file, path, root) {
 		if (path.length === 0) {
@@ -111,7 +111,12 @@
 		});
 		axios.get('/api/files')
 		.then(res => {
-			console.log(res);
+			res.data.map(file => {
+				let path = file.metadata.path.replace('./', '').replace(/\\/g, '/').split('/')
+				return {reference: file.filename, path: path.slice(1, -1), name: path.slice(-1)[0]}
+			}).forEach(file => {
+				insertFile(file, file.path, t);
+			});	
 		})
 		.catch(e => console.log(e));
 	})
