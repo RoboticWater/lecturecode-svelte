@@ -18,6 +18,7 @@
                 filesHeight += child.getBoundingClientRect().height;
             });
         }
+        updateParent();
     })
 
     function update(childHeight, index) {
@@ -38,8 +39,10 @@
 
     function handleClick(e) {
         e.stopPropagation();
+        console.log("clicked:", reference);
+        
         if (reference) {
-            updateContent();
+            updateContent(reference);
         } else if (files) {
             collapse = !collapse;
             update(0, -1);

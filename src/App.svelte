@@ -11,8 +11,8 @@
 
 	import FileNode from './FileNode.svelte';
 	let treeroot = {name: 'root', files: []}
-	let test = '<div class="root">\n	<div class="filetree">\n		<FileNode {...treeroot}/>\n		</div>\n		<div class="content">\n	</div>\n</div>'
-	let content;
+	let content = '<div class="root">\n	<div class="filetree">\n		<FileNode {...treeroot}/>\n		</div>\n		<div class="content">\n	</div>\n</div>';
+	let cur_file;
 	var editor;
 
 	let tab = 2
@@ -83,6 +83,16 @@
 		})
 		.catch(e => console.log(e));
 	}
+
+	function getContent(reference) {
+		axios.get('/api/files/' + reference)
+			.then(res => {
+				console.log("data recieved");
+				content = res.data;
+				cur_file = reference;
+			})
+			.catch(e => console.log(e));
+	}
 </script>
 
 <div class="root">
@@ -97,14 +107,14 @@
 	</div>
 	<div class="filetree">
 		{#each treeroot.files as file}
-			<FileNode {...file} updateContent={() => {}} collapse={false}/>
+			<FileNode {...file} updateContent={getContent} collapse={false}/>
 		{/each}
 	</div>
 	<div class="content">
 		<textarea
 			bind:this={content}
 			readonly
-			value={test}
+			value={content}
 			style='display: none'
 		></textarea>
 	</div>
