@@ -24,7 +24,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => console.log('Client disconnected'));
 });
 
-app.use(express.static(path.join(__dirname, '/../client/build')))
+app.use(express.static(path.join(__dirname, '/../public')));
 app.use(bodyParser.json());
 app.use(methodOverride('_method'));
 
