@@ -38,7 +38,6 @@
   },
   "scripts": {
     "build": "babel server -d dist --ignore server/tests --copy-files && rollup -c",
-    "autobuild": "rollup -c -w",
     "dev": "run-p start:dev autobuild",
     "start:dev": "sirv public --single --dev",
     "server": "babel-node ./server/server.js",

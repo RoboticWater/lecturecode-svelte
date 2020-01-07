@@ -24,10 +24,6 @@ var _http = require('http');
 
 var _http2 = _interopRequireDefault(_http);
 
-var _db = require('./models/db');
-
-var _db2 = _interopRequireDefault(_db);
-
 var _upload = require('./controllers/upload.controller');
 
 var upload = _interopRequireWildcard(_upload);
@@ -40,11 +36,13 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// import Database from './models/db';
+
 var PORT = process.env.PORT || 3001;
 
 var app = (0, _express2.default)();
 var router = _express2.default.Router();
-var db = new _db2.default(process.env.MONGODB_URI, process.env.MONGODB_URI);
+// const db = new Database(process.env.MONGODB_URI, process.env.MONGODB_URI);
 var server = _http2.default.Server(app);
 var io = (0, _socket2.default)(server);
 app.io = io;
@@ -64,25 +62,13 @@ router.get('/', function (req, res) {
     res.sendFile(_path2.default.join(__dirname + '/../public/index.html'));
 });
 
-router.post('/upload', db.upload.single('file'), function (req, res) {
-    return upload.upload(req, res);
-});
-router.get('/files', function (req, res) {
-    return files.getFiles(req, res, db);
-});
-router.get('/files/:filename', function (req, res) {
-    return files.getContent(req, res, db);
-});
-router.post('/files/deletepath', function (req, res) {
-    return files.deleteFileByPath(req, res, db);
-});
-router.post('/files/:filename', function (req, res) {
-    return files.getFile(req, res, db);
-});
-router.delete('/files/:filename', function (req, res) {
-    return files.deleteFile(req, res, db);
-});
-app.use('/api', router);
+// router.post('/upload', db.upload.single('file'), (req, res) => upload.upload(req, res))
+// router.get('/files', (req, res) => files.getFiles(req, res, db))
+// router.get('/files/:filename', (req, res) => files.getContent(req, res, db))
+// router.post('/files/deletepath', (req, res) => files.deleteFileByPath(req, res, db))
+// router.post('/files/:filename', (req, res) => files.getFile(req, res, db))
+// router.delete('/files/:filename', (req, res) => files.deleteFile(req, res, db))
+// app.use('/api', router);
 
 server.listen(PORT);
 server.on('error', onError);
