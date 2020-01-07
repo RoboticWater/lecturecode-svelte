@@ -11,6 +11,7 @@
 
 	import FileNode from './FileNode.svelte';
 	let treeroot = {name: 'root', files: []}
+	let editor_ref;
 	let content = '<div class="root">\n	<div class="filetree">\n		<FileNode {...treeroot}/>\n		</div>\n		<div class="content">\n	</div>\n</div>';
 	let cur_file;
 	var editor;
@@ -50,7 +51,7 @@
 			// 	.catch(e => console.log(e));
 			// }
 		});
-		editor = CodeMirror.fromTextArea(content, {
+		editor = CodeMirror.fromTextArea(editor_ref, {
 			lineNumbers: true,
 			lineWrapping: true,
 			indentWithTabs: true,
@@ -112,7 +113,7 @@
 	</div>
 	<div class="content">
 		<textarea
-			bind:this={content}
+			bind:this={editor_ref}
 			readonly
 			value={content}
 			style='display: none'
