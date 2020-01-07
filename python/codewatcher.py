@@ -1,4 +1,5 @@
 import time, sys, os
+from threading import Timer
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 import requests, json
@@ -38,7 +39,6 @@ class Watcher:
 
 		self.observer.join()
 
-
 class Handler(FileSystemEventHandler):
 
 	@staticmethod
@@ -54,24 +54,37 @@ class Handler(FileSystemEventHandler):
 				json={"filepath": relative_path})
 		elif event.event_type == 'created':
 			# Take any action here when a file is first created.
+			try:
+				f = open(event.src_path, 'rb')
+			except:
+				return
+
 			print("[watch] Received created event - %s." % relative_path)
 			req = requests.post(url + '/upload', 
 				data={"filepath": relative_path}, 
 				files={'file': 
-				(relative_path.split('\\')[-1], 
-					open(event.src_path, 'rb'), 
-					mimetypes.guess_type(event.src_path.split('\\')[-1])[0])})
+				(relative_path.split('\\')[-1], f, mimetypes.guess_type(event.src_path.split('\\')[-1])[0])})
 		elif event.event_type == 'modified':
 			# Taken any action here when a file is modified.
 			print("[watch] Received modified event - %s." % relative_path)
-			# print(src_path.split('\\'))
+			f = open(event.src_path, 'rb')
 			req = requests.post(url + '/upload', 
 				data={"filepath": relative_path}, 
 				files={'file': 
-				(event.src_path.split('\\')[-1], 
-					open(event.src_path, 'rb'), 
-					mimetypes.guess_type(event.src_path.split('\\')[-1])[0])})
+				(event.src_path.split('\\')[-1], f, mimetypes.guess_type(event.src_path.split('\\')[-1])[0])})
 
+def get_file(path):
+	i = 0
+	f = None
+	while f == None:
+		try:
+			i += 1
+			print("\t Opening " + path + " try: " + str(i))
+			f = open(path, 'rb')
+		except:
+			print("\t File not done writing")
+			time.sleep(0.5)
+	return f
 
 if __name__ == '__main__':
 	w = Watcher()

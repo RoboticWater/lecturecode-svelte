@@ -89,7 +89,9 @@
 		axios.get('/api/files/' + reference)
 			.then(res => {
 				console.log("data recieved");
-				content = res.data;
+				console.log(res.data);
+				
+				editor.setValue(res.data);
 				cur_file = reference;
 			})
 			.catch(e => console.log(e));
@@ -115,7 +117,6 @@
 		<textarea
 			bind:this={editor_ref}
 			readonly
-			value={content}
 			style='display: none'
 		></textarea>
 	</div>
