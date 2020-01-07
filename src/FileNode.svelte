@@ -18,7 +18,7 @@
                 filesHeight += child.getBoundingClientRect().height;
             });
         }
-        updateParent();
+        if (updateParent) updateParent();
     })
 
     function update(childHeight, index) {
