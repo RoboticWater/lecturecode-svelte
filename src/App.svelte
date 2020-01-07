@@ -72,6 +72,7 @@
 	function getFiles() {
 		axios.get('/api/files')
 		.then(res => {
+			treeroot = {name: 'root', files: []}
 			res.data.map(file => {
 				let path = file.metadata.path.replace('./', '').replace(/\\/g, '/').split('/')
 				return {reference: file.filename, path: path.slice(1, -1), name: path.slice(-1)[0]}
