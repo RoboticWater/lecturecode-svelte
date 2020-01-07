@@ -109,6 +109,11 @@
 			},
 			theme: 'material',
 		});
+		axios.get('/api/files')
+		.then(res => {
+			console.log(res);
+		})
+		.catch(e => console.log(e));
 	})
 </script>
 
