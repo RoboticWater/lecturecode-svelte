@@ -63,6 +63,8 @@
 			theme: 'material',
 		});
 		let files = getFiles();
+		console.log(files);
+		
 		if (files.length > 0) getContent(files[0].reference);
 	})
 
