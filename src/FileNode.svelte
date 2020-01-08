@@ -42,7 +42,7 @@
         console.log("clicked:", reference);
         
         if (reference) {
-            updateContent(reference);
+            updateContent(reference, name);
         } else if (files) {
             collapse = !collapse;
             update(0, -1);

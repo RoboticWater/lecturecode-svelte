@@ -2,6 +2,8 @@
 	import CodeMirror from "codemirror";
 	import axios from 'axios';
 	import io from 'socket.io-client';
+	import nprogress from 'nprogress'
+	import 'nprogress/nprogress.css'
 
 	import "codemirror/mode/javascript/javascript.js";
 	import "codemirror/mode/handlebars/handlebars.js";
@@ -14,6 +16,7 @@
 	let editor_ref;
 	let content = '<div class="root">\n	<div class="filetree">\n		<FileNode {...treeroot}/>\n		</div>\n		<div class="content">\n	</div>\n</div>';
 	let cur_file;
+	let cur_filename = '';
 	var editor;
 
 	let tab = 2
@@ -62,13 +65,10 @@
 			},
 			theme: 'material',
 		});
-		let files = getFiles();
-		console.log(files);
-		
-		if (files.length > 0) getContent(files[0].reference);
+		getFiles();
 	})
 
-	function getFiles() {
+	function getFiles(initial=false) {
 		let files = []
 		axios.get('/api/files')
 		.then(res => {
@@ -81,18 +81,23 @@
 				insertFile(file, file.path, treeroot);
 			});
 			treeroot = treeroot;
+			if (initial && files.length > 0) getContent(files[0].reference);
 		})
 		.catch(e => console.log(e));
-		return files;
 	}
 
-	function getContent(reference) {
+	function getContent(reference, name) {
+		nprogress.start()
 		axios.get('/api/files/' + reference)
 			.then(res => {
 				editor.setValue(res.data);
 				cur_file = reference;
+				nprogress.done()
 			})
-			.catch(e => console.log(e));
+			.catch(e => {
+				console.log(e);
+				nprogress.done()
+			});
 	}
 </script>
 
@@ -100,6 +105,7 @@
 
 	<img class="logo" src="./logo-01.svg" alt="">
 	<div class="topbar">
+		<div class="title">{cur_filename}</div>
 		<div class="option">
 			<div class="option__header">tab size:</div>
 			<input class="option__value" type="number" bind:value={tab} min="0">
