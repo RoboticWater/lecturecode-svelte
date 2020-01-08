@@ -92,6 +92,7 @@
 			.then(res => {
 				editor.setValue(res.data);
 				cur_file = reference;
+				cur_filename = name;
 				nprogress.done()
 			})
 			.catch(e => {
@@ -174,5 +175,12 @@
 	}
 	input {
 		padding: 0 0 0 3px;
+	}
+	.title {
+		height: 20px;
+		padding: 20px 20px 10px 10px;
+		text-align: center;
+		font-weight: 600;
+		padding-right: 10px;
 	}
 </style>
