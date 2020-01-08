@@ -42,7 +42,7 @@
 		socket.on('fileupdate', filename => {
 			console.log('fileupdate');
 			getFiles()
-			if (tcur_file === filename) {
+			if (cur_file === filename) {
 				getContent(filename);
 			}
 		});
@@ -63,7 +63,7 @@
 			theme: 'material',
 		});
 		let files = getFiles();
-		if (files.length > 0) getContent(files[0]);
+		if (files.length > 0) getContent(files[0].reference);
 	})
 
 	function getFiles() {
