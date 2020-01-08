@@ -42,14 +42,9 @@
 		socket.on('fileupdate', filename => {
 			console.log('fileupdate');
 			getFiles()
-			// if (this.state.cur_filename === filename) {
-			// 	axios.get('/api/files/' + filename)
-			// 	.then(res => {
-			// 		this.setState({cur_file: res.data, cur_filename: filename }, () => {
-			// 		})
-			// 	})
-			// 	.catch(e => console.log(e));
-			// }
+			if (tcur_file === filename) {
+				getContent(filename);
+			}
 		});
 		editor = CodeMirror.fromTextArea(editor_ref, {
 			lineNumbers: true,
@@ -67,22 +62,26 @@
 			},
 			theme: 'material',
 		});
-		getFiles();
+		let files = getFiles();
+		if (files.length > 0) getContent(files[0]);
 	})
 
 	function getFiles() {
+		let files = []
 		axios.get('/api/files')
 		.then(res => {
 			treeroot = {name: 'root', files: []}
-			res.data.map(file => {
+			files = res.data.map(file => {
 				let path = file.metadata.path.replace('./', '').replace(/\\/g, '/').split('/')
 				return {reference: file.filename, path: path.slice(1, -1), name: path.slice(-1)[0]}
-			}).forEach(file => {
+			})
+			files.forEach(file => {
 				insertFile(file, file.path, treeroot);
 			});
 			treeroot = treeroot;
 		})
 		.catch(e => console.log(e));
+		return files;
 	}
 
 	function getContent(reference) {
