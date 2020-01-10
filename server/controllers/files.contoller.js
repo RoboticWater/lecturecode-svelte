@@ -31,7 +31,7 @@ export function deleteFile(req, res, db) {
   });
 }
 
-// @route DELETE /files/:filename
+// @route DELETE /files/deletepath
 // @desc  Delete file
 export function deleteFileByPath(req, res, db) {
   db.gfs.files.findOne({ 'metadata.path': req.body.filepath }, (err, file) => {
