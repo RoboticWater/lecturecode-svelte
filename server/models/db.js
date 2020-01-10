@@ -70,24 +70,23 @@ export default class Database {
 
         const storage = new GridFsStorage({
             url: dbURI,
-            file: (req, file) => {
-                req.body.filepath,
-                    console.log("[upload] uploading:", req.body.filepath);
+            file: (req, file) => new Promise((resolve, reject) => {
+                console.log("[upload] uploading:", req.body.filepath);
                 let filename = md5(req.body.filepath) + path.extname(file.originalname);
-                this.gfs.delete({ filename: filename, root: 'uploads' }, (err, gridStore) => {
+                this.gfs.remove({ filename: filename, root: 'uploads' }, (err, gridStore) => {
                     if (err) {
-                      return ;
+                        return reject(err);
                     }
                     console.log("[upload] removed old file")
                 });
-                return {
+                resolve({
                     filename: filename,
                     bucketName: 'uploads',
                     metadata: {
                         path: req.body.filepath
                     }
-                };
-            }
+                });
+            })
         });
         this.upload = multer({ storage });
     }
