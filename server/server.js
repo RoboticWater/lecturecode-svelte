@@ -32,10 +32,7 @@ router.get('/', (req, res) => {
     res.sendFile(path.join(__dirname + '/../public/index.html'))
 })
 
-router.post('/upload', db.upload.single('file'), (req, res) => {
-    files.deleteFile(req, res, db)
-    upload.upload(req, res)
-})
+router.post('/upload', db.upload.single('file'), (req, res) => upload.upload(req, res))
 router.get('/files', (req, res) => files.getFiles(req, res, db))
 router.get('/files/:filename', (req, res) => files.getContent(req, res, db))
 router.post('/files/deletepath', (req, res) => files.deleteFileByPath(req, res, db))
