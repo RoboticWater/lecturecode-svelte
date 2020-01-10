@@ -73,16 +73,20 @@
 		.then(res => {
 			treeroot = {name: 'root', files: []}
 			files = res.data.map(file => {
-				let path = file.metadata.path.replace('./', '').replace(/\\/g, '/').split('/')
+				let path = getFilePath(file)
 				return {reference: file.filename, path: path.slice(1, -1), name: path.slice(-1)[0]}
 			})
 			files.forEach(file => {
 				insertFile(file, file.path, treeroot);
 			});
 			treeroot = treeroot;
-			if (initial && files.length > 0) getContent(files[0].reference);
+			if (initial && files.length > 0) getContent(files[0].reference, getFilePath(files[0]).slice(-1)[0]);
 		})
 		.catch(e => console.log(e));
+	}
+
+	function getFilePath(file) {
+		return file.metadata.path.replace('./', '').replace(/\\/g, '/').split('/')
 	}
 
 	function getContent(reference, name) {
