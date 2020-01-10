@@ -74,7 +74,7 @@ export default class Database {
                 req.body.filepath,
                     console.log("[upload] uploading:", req.body.filepath);
                 let filename = md5(req.body.filepath) + path.extname(file.originalname);
-                console.log(req, file)
+                console.log(file, req.body)
                 this.gfs.remove({ filename: filename, root: 'uploads' }, (err, gridStore) => {
                     if (err) {
                         console.log(err)
