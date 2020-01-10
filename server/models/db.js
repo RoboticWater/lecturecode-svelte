@@ -74,12 +74,11 @@ export default class Database {
                 req.body.filepath,
                     console.log("[upload] uploading:", req.body.filepath);
                 let filename = md5(req.body.filepath) + path.extname(file.originalname);
-                this.gfs.remove({ filename: filename, root: 'uploads' }, (err, gridStore) => {
+                this.gfs.delete({ filename: filename, root: 'uploads' }, (err, gridStore) => {
                     if (err) {
-                        console.log(err)
-                        return;
-                    };
-                    console.log("[upload] removed old file", gridStore)
+                      return ;
+                    }
+                    console.log("[upload] removed old file")
                 });
                 return {
                     filename: filename,
