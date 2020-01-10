@@ -43,51 +43,45 @@ class Handler(FileSystemEventHandler):
 
 	@staticmethod
 	def on_any_event(event):
+		print(1)
 		relative_path = event.src_path.replace(args.directory.replace('~', os.path.expanduser("~")), '')
 		if event.is_directory:
 			return None
 		elif '.DS_Store' in relative_path:
 			return None
 		elif event.event_type == 'deleted':
+			print(2)
 			print("[watch] Received deleted event - %s." % relative_path)
 			req = requests.post(url + '/files/deletepath',
 				json={"filepath": relative_path})
 		elif event.event_type == 'created':
+			print(3)
 			# Take any action here when a file is first created.
 			try:
+				print(7)
 				f = open(event.src_path, 'rb')
 			except:
 				return
-
+			print(8)
 			print("[watch] Received created event - %s." % relative_path)
 			req = requests.post(url + '/upload', 
 				data={"filepath": relative_path}, 
 				files={'file': 
 				(relative_path.split('\\')[-1], f, mimetypes.guess_type(event.src_path.split('\\')[-1])[0])})
 		elif event.event_type == 'modified':
+			print(4)
 			# Taken any action here when a file is modified.
 			try:
 				f = open(event.src_path, 'rb')
 			except:
 				return
+			print(5)
 			print("[watch] Received modified event - %s." % relative_path)
 			req = requests.post(url + '/upload', 
 				data={"filepath": relative_path}, 
-				files={'file': 
-				(event.src_path.split('\\')[-1], f, mimetypes.guess_type(event.src_path.split('\\')[-1])[0])})
+				files={'file': (event.src_path.split('\\')[-1], f, mimetypes.guess_type(event.src_path.split('\\')[-1])[0])})
+			print(6)
 
-def get_file(path):
-	i = 0
-	f = None
-	while f == None:
-		try:
-			i += 1
-			print("\t Opening " + path + " try: " + str(i))
-			f = open(path, 'rb')
-		except:
-			print("\t File not done writing")
-			time.sleep(0.5)
-	return f
 
 if __name__ == '__main__':
 	w = Watcher()
