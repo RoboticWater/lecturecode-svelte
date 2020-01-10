@@ -79,7 +79,7 @@ export default class Database {
                         console.log(err)
                         return;
                     };
-                    console.log("[upload] removed old file", gridstore)
+                    console.log("[upload] removed old file", gridStore)
                 });
                 return {
                     filename: filename,
