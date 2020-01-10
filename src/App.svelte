@@ -14,7 +14,6 @@
 	import FileNode from './FileNode.svelte';
 	let treeroot = {name: 'root', files: []}
 	let editor_ref;
-	let content = '<div class="root">\n	<div class="filetree">\n		<FileNode {...treeroot}/>\n		</div>\n		<div class="content">\n	</div>\n</div>';
 	let cur_file;
 	let cur_filename = '';
 	var editor;
@@ -65,7 +64,7 @@
 			},
 			theme: 'material',
 		});
-		getFiles();
+		getFiles(true);
 	})
 
 	function getFiles(initial=false) {
