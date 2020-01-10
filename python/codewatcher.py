@@ -66,9 +66,11 @@ class Handler(FileSystemEventHandler):
 				(relative_path.split('\\')[-1], f, mimetypes.guess_type(event.src_path.split('\\')[-1])[0])})
 		elif event.event_type == 'modified':
 			# Taken any action here when a file is modified.
+			try:
+				f = open(event.src_path, 'rb')
+			except:
+				return
 			print("[watch] Received modified event - %s." % relative_path)
-			f = open(event.src_path, 'rb')
-			print(f.tell())
 			req = requests.post(url + '/upload', 
 				data={"filepath": relative_path}, 
 				files={'file': 

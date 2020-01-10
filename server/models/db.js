@@ -80,6 +80,7 @@ export default class Database {
                         console.log(err)
                         return;
                     };
+                    console.log("success")
                 });
                 return {
                     filename: filename,
